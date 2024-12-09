@@ -4,7 +4,7 @@ This is a form builder application built using **Next.js** and **TailwindCSS**
 ## Live Demo
 
 You can view the live demo of the application at the following link:  
-[Live Demo Link]([https://peerlist-form-builder-liart.vercel.app/])
+[Live Demo Link](https://peerlist-form-builder-liart.vercel.app/)
 
 ## Features
 
