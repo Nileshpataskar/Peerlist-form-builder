@@ -51,7 +51,7 @@ const FormPreview = () => {
               Form Completeness - {Math.round(progress)}%
             </p>
             <p className="sm:hidden text-sm text-gray-500 mt-1">
-              Form Completed {Math.round(progress)}% 
+              Form Completed {Math.round(progress)}%
             </p>
             <Progress
               value={progress}
@@ -90,6 +90,7 @@ const FormPreview = () => {
             {q.type === "date" && (
               <div className="relative">
                 <Input
+                  type="date"
                   value={responses[q.id] || ""}
                   onChange={(e) => handleInputChange(q.id, e.target.value)}
                   placeholder=""
