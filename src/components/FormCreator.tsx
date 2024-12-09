@@ -12,7 +12,7 @@ import {  ArrowUpRightIcon, Backpack } from "lucide-react";
 const FormCreator = () => {
   const { setViewMode, addForm, setTempForm, tempForm } = useFormStore();
 
-  const [title, setTitle] = useState(tempForm?.title || "");
+  const [title, setTitle] = useState(tempForm?.title || "Untitled Form");
   const [questions, setQuestions] = useState<Question[]>(
     tempForm?.questions || []
   );

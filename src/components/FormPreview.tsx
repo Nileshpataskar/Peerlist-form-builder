@@ -3,7 +3,7 @@ import { useFormStore } from "@/lib/store";
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
 import { Button } from "./ui/button";
-import { AlignLeft, Calendar, Link2, MoveLeft, Type } from "lucide-react";
+import { AlignLeft,  Link2, MoveLeft, Type } from "lucide-react";
 import { Card } from "./ui/card";
 import { Progress } from "./ui/progress";
 
@@ -33,24 +33,35 @@ const FormPreview = () => {
   const progress = calculateProgress();
 
   return (
-    <div className="w-[700px] border h-full flex flex-col justify-between p-5">
+    <div className="w-full max-w-[700px] mx-auto border h-full flex flex-col justify-between p-5">
       <div className="space-y-4">
-        <div className="flex  justify-between">
+        <div className="flex justify-between gap-4 items-center">
           <div className="flex flex-row gap-5">
             <Button variant="outline" size="sm" onClick={handleBack}>
               <MoveLeft />
             </Button>
-            <h1 className="text-2xl font-semibold">{formToPreview?.title}</h1>
+            <h1 className="text-lg /sm:text-2xl font-semibold">{formToPreview?.title}</h1>
           </div>
 
           {/* Progress Bar */}
-          <div className="w-80 flex flex-col items-end">
+          <div className="w-2/4 sm:w-80 flex flex-col items-end mt-2">
             <p className="text-sm text-gray-500 mt-1">
               Form Completeness - {Math.round(progress)}%
             </p>
-            <Progress value={progress} max={100} className="h-2 mt-2" color="blue" style={{backgroundColor:'#00aa45'}}/>
+            <Progress
+              value={progress}
+              max={100}
+              className="h-2 mt-2 bg-blue-200"
+            >
+              <div
+                className="h-2 bg-blue-500"
+                style={{ width: `${progress}%` }}
+              ></div>
+            </Progress>
           </div>
         </div>
+
+        {/* Form Questions */}
         {formToPreview?.questions.map((q) => (
           <Card key={q.id} className="space-y-2 p-4">
             <label className="block text-md font-medium">{q.title}</label>
@@ -74,14 +85,10 @@ const FormPreview = () => {
             {q.type === "date" && (
               <div className="relative">
                 <Input
-                  type="date"
                   value={responses[q.id] || ""}
                   onChange={(e) => handleInputChange(q.id, e.target.value)}
                   placeholder=""
                 />
-                <div className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500">
-                  <Calendar className="h-5 w-5" />
-                </div>
               </div>
             )}
             {q.type === "url" && (
@@ -136,12 +143,14 @@ const FormPreview = () => {
           </Card>
         ))}
       </div>
+
+      {/* Submit Button */}
       <div className="mt-4 flex justify-end border-t-2 p-5">
         <Button
           variant="outline"
           size="sm"
           onClick={() => alert(JSON.stringify(responses, null, 2))}
-          className="bg-[#00aa45] hover:bg-[#00aa45]/80 rounded-xl text-sm font-semibold text-white hover:text-white"
+          className="bg-[#00aa45] hover:bg-[#00aa45]/80 rounded-xl text-sm font-semibold text-white"
         >
           Submit
         </Button>
