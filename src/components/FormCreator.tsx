@@ -12,7 +12,7 @@ import {  ArrowUpRightIcon, Backpack } from "lucide-react";
 const FormCreator = () => {
   const { setViewMode, addForm, setTempForm, tempForm } = useFormStore();
 
-  const [title, setTitle] = useState(tempForm?.title || "Untitled Form");
+  const [title, setTitle] = useState(tempForm?.title || "");
   const [questions, setQuestions] = useState<Question[]>(
     tempForm?.questions || []
   );
@@ -49,10 +49,7 @@ const FormCreator = () => {
 
   const handleSave = () => {
     if (title === "") {
-      toast.info("Please enter the form title.", {
-        position: window.innerWidth < 768 ? "top-center" : "bottom-right",
-      });
-      return;
+      setTitle("Untitled Form");
     }
     if (questions.length === 0) {
       toast.info("Please add at least one question.", {
