@@ -1,14 +1,6 @@
 import React from "react";
-
-import {
-  AlignLeft,
-  Calendar,
-  CircleDot,
-  
-  Link2,
-  PlusCircle,
-  Type,
-} from "lucide-react";
+import { motion } from "framer-motion";
+import { CircleDot, PlusCircle } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -17,17 +9,18 @@ import {
 } from "./ui/dropdown-menu";
 import { Button } from "./ui/button";
 import { Question, QuestionType } from "@/lib/types";
+import { Calendar, Long, Short, url } from "./QuestionCard";
 
 const questionTypes: {
   type: QuestionType;
   label: string;
   icon: React.ComponentType;
 }[] = [
-  { type: "short", label: "Short Answer", icon: Type },
-  { type: "long", label: "Long Answer", icon: AlignLeft },
+  { type: "short", label: "Short Answer", icon: Short },
+  { type: "long", label: "Long Answer", icon: Long },
   { type: "single", label: "Single Select", icon: CircleDot },
   { type: "date", label: "Date", icon: Calendar },
-  { type: "url", label: "URL", icon: Link2 },
+  { type: "url", label: "URL", icon: url },
 ];
 
 const QuestionButton = ({
@@ -43,10 +36,16 @@ const QuestionButton = ({
     </DropdownMenuTrigger>
     <DropdownMenuContent>
       {questionTypes.map((q) => (
-        <DropdownMenuItem key={q.type} onClick={() => onSelect(q.type)}>
-          <q.icon />
-          {q.label}
-        </DropdownMenuItem>
+        <motion.div
+          key={q.type}
+          whileHover={{ scale: 1.02 }}
+          transition={{ type: "spring", stiffness: 300 }}
+        >
+          <DropdownMenuItem onClick={() => onSelect(q.type)}>
+            <q.icon />
+            {q.label}
+          </DropdownMenuItem>
+        </motion.div>
       ))}
     </DropdownMenuContent>
   </DropdownMenu>
