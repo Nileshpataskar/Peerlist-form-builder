@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 
-import { Poltawski_Nowy } from "@next/font/google";
+import { Poltawski_Nowy } from "next/font/google";
 import { Toaster } from "@/components/ui/sonner";
 
 export const metadata: Metadata = {
