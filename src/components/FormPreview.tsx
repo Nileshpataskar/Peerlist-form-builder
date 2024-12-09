@@ -41,7 +41,7 @@ const FormPreview = () => {
               <MoveLeft />
             </Button>
             <h1 className="text-lg /sm:text-2xl font-semibold">
-              {formToPreview?.title}
+              {formToPreview?.title || "Untitled Form"}
             </h1>
           </div>
 
@@ -51,7 +51,7 @@ const FormPreview = () => {
               Form Completeness - {Math.round(progress)}%
             </p>
             <p className="sm:hidden text-sm text-gray-500 mt-1">
-               {Math.round(progress)}% From Filled
+              Form Completed {Math.round(progress)}% 
             </p>
             <Progress
               value={progress}

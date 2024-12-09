@@ -7,7 +7,7 @@ import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { toast } from "sonner";
 import { ScrollArea } from "./ui/scroll-area";
-import {  ArrowUpRightIcon, Backpack } from "lucide-react";
+import { ArrowUpRightIcon, Backpack } from "lucide-react";
 
 const FormCreator = () => {
   const { setViewMode, addForm, setTempForm, tempForm } = useFormStore();
@@ -48,9 +48,11 @@ const FormCreator = () => {
   };
 
   const handleSave = () => {
+    // Ensure the title is set to "Untitled Form" if it's empty
     if (title === "") {
       setTitle("Untitled Form");
     }
+
     if (questions.length === 0) {
       toast.info("Please add at least one question.", {
         position: window.innerWidth < 768 ? "top-center" : "bottom-right",
@@ -76,12 +78,11 @@ const FormCreator = () => {
   };
 
   const handlePreview = () => {
+    // Ensure the title is set to "Untitled Form" if it's empty
     if (title === "") {
-      toast.info("Please enter the form title.", {
-        position: window.innerWidth < 768 ? "top-center" : "bottom-right",
-      });
-      return;
+      setTitle("Untitled Form");
     }
+
     if (questions.length === 0) {
       toast.info("Please add at least one question.", {
         position: window.innerWidth < 768 ? "top-center" : "bottom-right",
@@ -105,7 +106,7 @@ const FormCreator = () => {
           <Input
             value={title || ""}
             onChange={(e) => setTitle(e.target.value)}
-            placeholder="Form Title"
+            placeholder="Untitled form"
             className="text-md placeholder:text-sm sm:text-2xl rounded-xl border-none"
           />
           <Button
