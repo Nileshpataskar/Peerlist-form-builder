@@ -1,23 +1,32 @@
-import { Question } from "@/lib/types";
 import React, { useState } from "react";
+import { Question } from "@/lib/types"; // Assuming you have a Question type
 import { Card, CardContent, CardHeader } from "./ui/card";
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
 import { Button } from "./ui/button";
-import { Grip, Trash2 } from "lucide-react";
-import { Label } from "./ui/label";
-import { Switch } from "./ui/switch";
+import { Trash2, GripVertical, Tornado } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@radix-ui/react-dropdown-menu";
 
 interface QuestionCardProps {
   question: Question;
   onUpdate: (question: Question) => void;
   onDelete: (id: string) => void;
+  showError: boolean;
 }
 
-const QuestionCard = ({ question, onDelete, onUpdate }: QuestionCardProps) => {
+const QuestionCard = ({
+  question,
+  onDelete,
+  onUpdate,
+  showError,
+}: QuestionCardProps) => {
   const [options, setOptions] = useState<string[]>(question.options || []);
 
-  console.log("Question data", question);
   const handleOptionAdd = () => {
     const newOption = [...options, ""];
     setOptions(newOption);
@@ -29,39 +38,73 @@ const QuestionCard = ({ question, onDelete, onUpdate }: QuestionCardProps) => {
     setOptions(newOptions);
     onUpdate({ ...question, options: newOptions });
   };
+
+  const handleTypeChange = (newType: string) => {
+    const updatedQuestion = {
+      ...question,
+      type: newType as Question["type"],
+      options: newType === "single" ? ["Option 1", "Option 2"] : undefined, // Reset options if necessary
+    };
+    setOptions(updatedQuestion.options || []); // Update local options state if type is 'single'
+    onUpdate(updatedQuestion);
+  };
+
   return (
-    <div>
-      <Card className="relative group">
-        <div className="absolute left-2 top-1/2 -translate-y-1/2 cursor-move opacity-40 hover:opacity-100">
-          <Grip className="h-4 w-4" />
-        </div>
+    <div className="m-5">
+      <Card
+        className={`relative group ${showError && !question.title ? "" : ""}`}
+      >
         <CardHeader className="space-y-2 pb-4">
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2">
             <Input
               value={question.title}
               onChange={(e) => onUpdate({ ...question, title: e.target.value })}
               placeholder="Question title"
-              className="text-lg font-semibold"
+              className={`text-lg font-semibold ${
+                showError && !question.title ? "border-red-500" : ""
+              }`}
             />
+
+            <DropdownMenu>
+              <DropdownMenuTrigger>
+                <Tornado className="h-4 w-4" />
+              </DropdownMenuTrigger>
+
+              <DropdownMenuContent className="border rounded-md p-2 bg-white text-sm">
+                <DropdownMenuItem onClick={() => handleTypeChange("short")}>
+                  Short
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => handleTypeChange("long")}>
+                  Long
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => handleTypeChange("single")}>
+                  Single Choice
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => handleTypeChange("date")}>
+                  Date
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+
             <Button
               variant="ghost"
               size="icon"
-              className="opacity-0 group-hover:opacity-100 transition-opacity"
               onClick={() => onDelete(question.id)}
             >
               <Trash2 className="h-4 w-4" />
             </Button>
+            <Button variant="ghost" size="icon" className="cursor-move">
+              <GripVertical className="h-4 w-4" />
+            </Button>
           </div>
-          <div className="flex items-center space-x-2">
-            <Switch
-              id={`required-${question.id}`}
-              checked={question.required}
-              onCheckedChange={(checked) =>
-                onUpdate({ ...question, required: checked })
-              }
-            />
-            <Label htmlFor={`required-${question.id}`}>Required</Label>
-          </div>
+          <Input
+            value={question.description || ""}
+            onChange={(e) =>
+              onUpdate({ ...question, description: e.target.value })
+            }
+            placeholder="Question description (optional)"
+            className="text-sm"
+          />
         </CardHeader>
         <CardContent>
           {question.type === "short" && (
@@ -90,11 +133,8 @@ const QuestionCard = ({ question, onDelete, onUpdate }: QuestionCardProps) => {
               </Button>
             </div>
           )}
-          {question.type === "number" && (
-            <Input type="number" disabled placeholder="Number input" />
-          )}
-          {question.type === "url" && (
-            <Input type="url" disabled placeholder="URL input" />
+          {question.type === "date" && (
+            <Input type="date" disabled placeholder="Date input" />
           )}
         </CardContent>
       </Card>

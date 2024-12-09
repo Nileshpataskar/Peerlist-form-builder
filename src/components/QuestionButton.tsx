@@ -1,62 +1,43 @@
-"use client";
-
-import { QuestionType } from "@/lib/types";
-import { AlignLeft, Hash, Link2, List, PlusCircle, Type } from "lucide-react";
 import React from "react";
-import { Button } from "./ui/button";
+
+import { AlignLeft, Hash, Link2, List, PlusCircle, Type } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@radix-ui/react-dropdown-menu";
-import { DropdownMenuItem } from "./ui/dropdown-menu";
+} from "./ui/dropdown-menu";
+import { Button } from "./ui/button";
+import { Question, QuestionType } from "@/lib/types";
 
-// interface QuestionCardProps {
-//   question: Question;
-//   onUpdate: (question: Question) => void;
-//   onDelete: (id: string) => void;
-// }
-
-interface QuestionButtonProps {
-  onSelect: (type: QuestionType) => void;
-}
-
-const questionTypes = [
-  { type: "short" as const, icon: Type, label: "Short Answer" },
-  { type: "long" as const, icon: AlignLeft, label: "Long Answer" },
-  { type: "single" as const, icon: List, label: "Single Select" },
-  { type: "number" as const, icon: Hash, label: "Number" },
-  { type: "url" as const, icon: Link2, label: "URL" },
+const questionTypes: { type: QuestionType; label: string; icon: React.ComponentType }[] = [
+  { type: "short", label: "Short Answer", icon: Type },
+  { type: "long", label: "Long Answer", icon: AlignLeft },
+  { type: "single", label: "Single Select", icon: List },
+  { type: "date", label: "Date", icon: Hash },
+  { type: "url", label: "URL", icon: Link2 },
 ];
 
-const QuestionButton = ({ onSelect }: QuestionButtonProps) => {
-  //   const [option, setOption] = useState([]);
-  return (
-    <div className="relative group">
-      <div className="w-full flex justify-center">
-        <DropdownMenu>
-          <DropdownMenuTrigger className="" asChild>
-            <Button variant="outline" className="rounded-xl">
-              <PlusCircle />
-              Add Question
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent className=" bg-white shadow-lg p-3">
-            {questionTypes.map(({ type, icon: Icon, label }) => (
-              <DropdownMenuItem
-                key={type}
-                onClick={() => onSelect(type)}
-                className="flex items-center gap-2 cursor-pointer"
-              >
-                <Icon className="h-4 w-4" />
-                {label}
-              </DropdownMenuItem>
-            ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
-    </div>
-  );
-};
+const QuestionButton = ({
+  onSelect,
+}: {
+  onSelect: (type: Question["type"]) => void;
+}) => (
+  <DropdownMenu>
+    <DropdownMenuTrigger className="mt-2" asChild>
+      <Button size="sm" variant="outline">
+        <PlusCircle /> Add Question
+      </Button>
+    </DropdownMenuTrigger>
+    <DropdownMenuContent>
+      {questionTypes.map((q) => (
+        <DropdownMenuItem key={q.type} onClick={() => onSelect(q.type)}>
+          <q.icon />
+          {q.label}
+        </DropdownMenuItem>
+      ))}
+    </DropdownMenuContent>
+  </DropdownMenu>
+);
 
 export default QuestionButton;
