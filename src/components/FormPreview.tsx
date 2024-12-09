@@ -3,7 +3,7 @@ import { useFormStore } from "@/lib/store";
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
 import { Button } from "./ui/button";
-import { MoveLeft } from "lucide-react";
+import { AlignLeft, Calendar, Link2, MoveLeft, Type } from "lucide-react";
 import { Card } from "./ui/card";
 import { Progress } from "./ui/progress";
 
@@ -48,7 +48,7 @@ const FormPreview = () => {
             <p className="text-sm text-gray-500 mt-1">
               Form Completeness - {Math.round(progress)}%
             </p>
-            <Progress value={progress} max={100} className="h-2 mt-2" />
+            <Progress value={progress} max={100} className="h-2 mt-2" color="blue" style={{backgroundColor:'#00aa45'}}/>
           </div>
         </div>
         {formToPreview?.questions.map((q) => (
@@ -60,18 +60,55 @@ const FormPreview = () => {
               </label>
             )}
             {q.type === "short" && (
-              <Input
-                value={responses[q.id] || ""}
-                onChange={(e) => handleInputChange(q.id, e.target.value)}
-                placeholder="Enter your answer"
-              />
+              <div className="relative">
+                <Input
+                  value={responses[q.id] || ""}
+                  onChange={(e) => handleInputChange(q.id, e.target.value)}
+                  placeholder="Enter your answer"
+                />
+                <div className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500">
+                  <Type className="h-5 w-5" />
+                </div>
+              </div>
+            )}
+            {q.type === "date" && (
+              <div className="relative">
+                <Input
+                  type="date"
+                  value={responses[q.id] || ""}
+                  onChange={(e) => handleInputChange(q.id, e.target.value)}
+                  placeholder=""
+                />
+                <div className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500">
+                  <Calendar className="h-5 w-5" />
+                </div>
+              </div>
+            )}
+            {q.type === "url" && (
+              <div className="relative">
+                <Input
+                  value={responses[q.id] || ""}
+                  onChange={(e) => handleInputChange(q.id, e.target.value)}
+                  placeholder="Add Url"
+                  className="pr-8" // Add right padding to make space for the icon
+                />
+                <div className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500">
+                  <Link2 className="h-5 w-5" />
+                </div>
+              </div>
             )}
             {q.type === "long" && (
-              <Textarea
-                value={responses[q.id] || ""}
-                onChange={(e) => handleInputChange(q.id, e.target.value)}
-                placeholder="Enter your answer"
-              />
+              <div className="relative">
+                <Textarea
+                  value={responses[q.id] || ""}
+                  onChange={(e) => handleInputChange(q.id, e.target.value)}
+                  placeholder="Enter your answer"
+                />
+
+                <div className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500">
+                  <AlignLeft className="h-5 w-5" />
+                </div>
+              </div>
             )}
             {q.type === "single" && q.options && (
               <div className="space-y-2">
@@ -104,7 +141,7 @@ const FormPreview = () => {
           variant="outline"
           size="sm"
           onClick={() => alert(JSON.stringify(responses, null, 2))}
-          className="bg-[#00aa45] hover:bg-[#00aa45]/80 rounded-xl text-sm font-semibold text-white"
+          className="bg-[#00aa45] hover:bg-[#00aa45]/80 rounded-xl text-sm font-semibold text-white hover:text-white"
         >
           Submit
         </Button>

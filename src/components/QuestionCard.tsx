@@ -1,29 +1,23 @@
 import React, { useState } from "react";
-import { Question } from "@/lib/types"; // Assuming you have a Question type
+import { Question } from "@/lib/types";
 import { Card, CardContent, CardHeader } from "./ui/card";
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
 import { Button } from "./ui/button";
-import {
-  Trash2,
-  // GripVertical,
-  ChevronDown,
-  Plus,
-  CircleDot,
-} from "lucide-react";
+import { Trash2, ChevronDown, Plus, CircleDot, Calendar } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@radix-ui/react-dropdown-menu";
-import { Type, AlignLeft, Hash, Link2 } from "lucide-react"; // Assuming these icons match your types
+import { Type, AlignLeft,  Link2 } from "lucide-react"; // Assuming these icons match your types
 
 const questionTypes = [
   { type: "short", label: "Short Answer", icon: Type },
   { type: "long", label: "Long Answer", icon: AlignLeft },
   { type: "single", label: "Single Select", icon: CircleDot },
-  { type: "date", label: "Date", icon: Hash },
+  { type: "date", label: "Date", icon: Calendar },
   { type: "url", label: "URL", icon: Link2 },
 ];
 
@@ -32,8 +26,8 @@ interface QuestionCardProps {
   onUpdate: (question: Question) => void;
   onDelete: (id: string) => void;
   showError: boolean;
-  index: number; // Add index to the props
-  questions: Question[]; // Add questions list to the props
+  index: number;
+  questions: Question[];
 }
 
 const QuestionCard = ({
@@ -70,7 +64,7 @@ const QuestionCard = ({
         type: newType as Question["type"],
         options: newType === "single" ? ["", ""] : undefined,
       };
-      setOptions(updatedQuestion.options || []); // Update local options state if type is 'single'
+      setOptions(updatedQuestion.options || []);
       onUpdate(updatedQuestion);
     }
   };
@@ -129,11 +123,6 @@ const QuestionCard = ({
             >
               <Trash2 className="h-4 w-4" />
             </Button>
-
-            {/* <Button variant="ghost" size="icon" className="cursor-move">
-              <GripVertical className="h-4 w-4" />
-            </Button>
-          */}
           </div>
           <Input
             value={question.description || ""}
@@ -153,7 +142,7 @@ const QuestionCard = ({
           )}
 
           {question.type === "single" && (
-            <div className="space-y-2 ">
+            <div className="space-y-2">
               {options.map((option, index) => (
                 <div key={index} className="flex items-center gap-2">
                   <input
@@ -188,6 +177,15 @@ const QuestionCard = ({
 
           {question.type === "date" && (
             <Input type="date" disabled placeholder="Date input" />
+          )}
+
+          {question.type === "url" && (
+            <Input
+              type="url"
+              disabled
+              value={question.url || ""}
+              placeholder="Enter a URL"
+            />
           )}
         </CardContent>
       </Card>

@@ -2,8 +2,9 @@ import React from "react";
 
 import {
   AlignLeft,
+  Calendar,
   CircleDot,
-  Hash,
+  
   Link2,
   PlusCircle,
   Type,
@@ -25,7 +26,7 @@ const questionTypes: {
   { type: "short", label: "Short Answer", icon: Type },
   { type: "long", label: "Long Answer", icon: AlignLeft },
   { type: "single", label: "Single Select", icon: CircleDot },
-  { type: "date", label: "Date", icon: Hash },
+  { type: "date", label: "Date", icon: Calendar },
   { type: "url", label: "URL", icon: Link2 },
 ];
 
