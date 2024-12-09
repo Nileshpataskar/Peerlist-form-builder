@@ -3,9 +3,10 @@ import { useFormStore } from "@/lib/store";
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
 import { Button } from "./ui/button";
-import { AlignLeft, Link2, MoveLeft, Type } from "lucide-react";
+import { AlignLeft, Download, Link2, MoveLeft, Type } from "lucide-react";
 import { Card } from "./ui/card";
 import { Progress } from "./ui/progress";
+import { jsPDF } from "jspdf";
 
 const FormPreview = () => {
   const { currentForm, setViewMode, tempForm } = useFormStore();
@@ -31,6 +32,31 @@ const FormPreview = () => {
   };
 
   const progress = calculateProgress();
+
+  // Function to generate and download PDF
+  const handleDownloadPdf = () => {
+    const doc = new jsPDF();
+
+    // Title of the form
+    doc.setFontSize(16);
+    doc.text(formToPreview?.title || "Untitled Form", 20, 20);
+
+    // Add questions and answers
+    let y = 30;
+    formToPreview?.questions.forEach((q) => {
+      doc.setFontSize(12);
+      doc.text(`Q: ${q.title}`, 20, y);
+      y += 10;
+
+      // Show response for the question
+      const response = responses[q.id] || "No response";
+      doc.text(`A: ${response}`, 20, y);
+      y += 15;
+    });
+
+    // Save PDF
+    doc.save(`${formToPreview?.title || "Untitled Form"}.pdf`);
+  };
 
   return (
     <div className="w-full max-w-[700px] mx-auto border h-full flex flex-col justify-between p-5">
@@ -151,12 +177,29 @@ const FormPreview = () => {
       </div>
 
       {/* Submit Button */}
-      <div className="mt-4 flex justify-end border-t-2 p-5">
+      <div className="mt-4 flex justify-end border-t-2 gap-5 p-5">
         <Button
           variant="outline"
           size="sm"
-          onClick={() => alert(JSON.stringify(responses, null, 2))}
-          className="bg-[#00aa45] hover:bg-[#00aa45]/80 rounded-xl text-sm font-semibold text-white"
+          onClick={handleDownloadPdf} // Trigger PDF download on click
+          className="rounded-xl text-sm font-semibold"
+        >
+          <Download /> pdf
+        </Button>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() =>
+            alert(
+              `Form Submitted successfully\n\n${JSON.stringify(
+                responses,
+                null,
+                2
+              )}`
+            )
+          }
+          // Trigger PDF download on click
+          className="bg-[#00aa45] hover:text-white hover:bg-[#00aa45]/80 rounded-xl text-sm  text-white"
         >
           Submit
         </Button>

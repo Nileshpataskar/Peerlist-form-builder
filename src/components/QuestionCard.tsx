@@ -11,7 +11,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@radix-ui/react-dropdown-menu";
-import { Type, AlignLeft,  Link2 } from "lucide-react"; // Assuming these icons match your types
+import { Type, AlignLeft, Link2 } from "lucide-react"; // Assuming these icons match your types
 
 const questionTypes = [
   { type: "short", label: "Short Answer", icon: Type },
@@ -72,7 +72,7 @@ const QuestionCard = ({
   return (
     <div className="m-5">
       <Card
-        className={`relative group ${
+        className={`relative group rounded-s-3xl ${
           showError && !question.title && index < questions.length - 1
             ? "border-red-500"
             : ""
@@ -101,16 +101,16 @@ const QuestionCard = ({
                 </div>
               </DropdownMenuTrigger>
 
-              <DropdownMenuContent className="border rounded-md p-2 bg-white text-sm cursor-pointer">
+              <DropdownMenuContent className="border border-gray-300 rounded-md shadow-lg p-2 bg-white text-sm cursor-default mt-1">
+                
                 {questionTypes.map(({ type, label, icon: Icon }) => (
                   <DropdownMenuItem
                     key={type}
                     onClick={() => handleTypeChange(type)}
+                    className="flex items-center gap-2 p-2 rounded-md hover:bg-blue-100 hover:text-blue-600 transition-all ease-in-out duration-200"
                   >
-                    <div className="flex items-center gap-2">
-                      <Icon className="h-4 w-4" />
-                      <span>{label}</span>
-                    </div>
+                    <Icon className="h-4 w-4 text-gray-600" />
+                    <span>{label}</span>
                   </DropdownMenuItem>
                 ))}
               </DropdownMenuContent>
@@ -131,6 +131,7 @@ const QuestionCard = ({
             }
             placeholder="Question description (optional)"
             className="text-sm border-none"
+          
           />
         </CardHeader>
         <CardContent>
