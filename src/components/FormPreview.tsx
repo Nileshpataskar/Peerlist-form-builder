@@ -94,8 +94,8 @@ const FormPreview = () => {
 
         {/* Form Questions */}
         {formToPreview?.questions.map((q) => (
-          <Card key={q.id} className="space-y-2 p-4">
-            <label className="block text-md font-medium">{q.title}</label>
+          <Card key={q.id} className="space-y-2  p-4">
+            <label className="block text-md font-bold px-1">{q.title}</label>
             {q.description && (
               <label className="block text-sm text-gray-500">
                 {q.description}

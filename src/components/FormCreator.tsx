@@ -66,6 +66,22 @@ const FormCreator = () => {
       return;
     }
 
+    
+  
+    if (
+      questions.some(
+        (q) =>
+          q.type === "single" &&
+          q.options &&
+          q.options.some((option) => option.trim() === "")
+      )
+    ) {
+      toast.error("Please fill all options in single-select questions.", {
+        position: window.innerWidth < 768 ? "top-center" : "bottom-right",
+      });
+      return;
+    }
+
     const form = {
       id: crypto.randomUUID(),
       title,

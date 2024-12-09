@@ -176,6 +176,10 @@ const QuestionCard = ({
   );
 
   const handleOptionAdd = () => {
+    if (options.some((opt) => opt.trim() === "")) {
+      alert("Please fill in all options before adding a new one.");
+      return;
+    }
     const newOption = [...options, ""];
     setOptions(newOption);
     onUpdate({ ...question, options: newOption });
@@ -200,6 +204,9 @@ const QuestionCard = ({
       onUpdate(updatedQuestion);
     }
   };
+
+  const isAddDisabled = options.some((opt) => opt.trim() === "");
+
   return (
     <div className="m-5">
       <motion.div
@@ -207,8 +214,6 @@ const QuestionCard = ({
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3 }}
         style={{
-          fontSize: "1rem", // equivalent to text-md
-          fontWeight: "bold", // equivalent to font-bold
           ...(showError && !question.title && index < questions.length - 1
             ? { border: "1px solid #f87171" }
             : {}), // red border
@@ -234,7 +239,7 @@ const QuestionCard = ({
                 <DropdownMenuTrigger asChild>
                   <motion.div
                     whileHover={{ scale: 1.05 }}
-                    transition={{  stiffness: 300 }}
+                    transition={{ stiffness: 300 }}
                     style={{
                       display: "flex",
                       alignItems: "center",
@@ -298,9 +303,6 @@ const QuestionCard = ({
                       id={`option-${index}`}
                       name={`question-${question.id}`}
                       value={option}
-                      onChange={(e) =>
-                        handleOptionChange(index, e.target.value)
-                      }
                       className="h-4 w-4"
                     />
                     <Input
@@ -319,6 +321,7 @@ const QuestionCard = ({
                     size="sm"
                     onClick={handleOptionAdd}
                     className="w-8 h-8 flex items-center justify-center rounded-full"
+                    disabled={isAddDisabled}
                   >
                     <Plus className="h-4 w-4" />
                   </Button>
