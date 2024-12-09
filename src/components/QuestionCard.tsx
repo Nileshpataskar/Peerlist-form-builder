@@ -4,19 +4,36 @@ import { Card, CardContent, CardHeader } from "./ui/card";
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
 import { Button } from "./ui/button";
-import { Trash2, GripVertical, Tornado } from "lucide-react";
+import {
+  Trash2,
+  // GripVertical,
+  ChevronDown,
+  Plus,
+  CircleDot,
+} from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@radix-ui/react-dropdown-menu";
+import { Type, AlignLeft, Hash, Link2 } from "lucide-react"; // Assuming these icons match your types
+
+const questionTypes = [
+  { type: "short", label: "Short Answer", icon: Type },
+  { type: "long", label: "Long Answer", icon: AlignLeft },
+  { type: "single", label: "Single Select", icon: CircleDot },
+  { type: "date", label: "Date", icon: Hash },
+  { type: "url", label: "URL", icon: Link2 },
+];
 
 interface QuestionCardProps {
   question: Question;
   onUpdate: (question: Question) => void;
   onDelete: (id: string) => void;
   showError: boolean;
+  index: number; // Add index to the props
+  questions: Question[]; // Add questions list to the props
 }
 
 const QuestionCard = ({
@@ -24,8 +41,13 @@ const QuestionCard = ({
   onDelete,
   onUpdate,
   showError,
+  index,
+  questions,
 }: QuestionCardProps) => {
   const [options, setOptions] = useState<string[]>(question.options || []);
+  const [selectedType, setSelectedType] = useState(() =>
+    questionTypes.find((q) => q.type === question.type)
+  );
 
   const handleOptionAdd = () => {
     const newOption = [...options, ""];
@@ -40,49 +62,63 @@ const QuestionCard = ({
   };
 
   const handleTypeChange = (newType: string) => {
-    const updatedQuestion = {
-      ...question,
-      type: newType as Question["type"],
-      options: newType === "single" ? ["Option 1", "Option 2"] : undefined, // Reset options if necessary
-    };
-    setOptions(updatedQuestion.options || []); // Update local options state if type is 'single'
-    onUpdate(updatedQuestion);
+    const selected = questionTypes.find((q) => q.type === newType);
+    if (selected) {
+      setSelectedType(selected);
+      const updatedQuestion = {
+        ...question,
+        type: newType as Question["type"],
+        options: newType === "single" ? ["", ""] : undefined,
+      };
+      setOptions(updatedQuestion.options || []); // Update local options state if type is 'single'
+      onUpdate(updatedQuestion);
+    }
   };
 
   return (
     <div className="m-5">
       <Card
-        className={`relative group ${showError && !question.title ? "" : ""}`}
+        className={`relative group ${
+          showError && !question.title && index < questions.length - 1
+            ? "border-red-500"
+            : ""
+        }`}
       >
         <CardHeader className="space-y-2 pb-4">
           <div className="flex items-center gap-2">
             <Input
               value={question.title}
               onChange={(e) => onUpdate({ ...question, title: e.target.value })}
-              placeholder="Question title"
-              className={`text-lg font-semibold ${
-                showError && !question.title ? "border-red-500" : ""
+              placeholder="Write a Question"
+              className={`text-md font-bold ${
+                showError && !question.title && index < questions.length - 1
+                  ? "border border-red-500"
+                  : "border-none"
               }`}
             />
 
             <DropdownMenu>
               <DropdownMenuTrigger>
-                <Tornado className="h-4 w-4" />
+                <div className="flex items-center gap-2 cursor-pointer">
+                  {selectedType?.icon && (
+                    <selectedType.icon className="h-4 w-4" />
+                  )}
+                  <ChevronDown className="h-4 w-4" />
+                </div>
               </DropdownMenuTrigger>
 
-              <DropdownMenuContent className="border rounded-md p-2 bg-white text-sm">
-                <DropdownMenuItem onClick={() => handleTypeChange("short")}>
-                  Short
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => handleTypeChange("long")}>
-                  Long
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => handleTypeChange("single")}>
-                  Single Choice
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => handleTypeChange("date")}>
-                  Date
-                </DropdownMenuItem>
+              <DropdownMenuContent className="border rounded-md p-2 bg-white text-sm cursor-pointer">
+                {questionTypes.map(({ type, label, icon: Icon }) => (
+                  <DropdownMenuItem
+                    key={type}
+                    onClick={() => handleTypeChange(type)}
+                  >
+                    <div className="flex items-center gap-2">
+                      <Icon className="h-4 w-4" />
+                      <span>{label}</span>
+                    </div>
+                  </DropdownMenuItem>
+                ))}
               </DropdownMenuContent>
             </DropdownMenu>
 
@@ -93,9 +129,11 @@ const QuestionCard = ({
             >
               <Trash2 className="h-4 w-4" />
             </Button>
-            <Button variant="ghost" size="icon" className="cursor-move">
+
+            {/* <Button variant="ghost" size="icon" className="cursor-move">
               <GripVertical className="h-4 w-4" />
             </Button>
+          */}
           </div>
           <Input
             value={question.description || ""}
@@ -103,36 +141,51 @@ const QuestionCard = ({
               onUpdate({ ...question, description: e.target.value })
             }
             placeholder="Question description (optional)"
-            className="text-sm"
+            className="text-sm border-none"
           />
         </CardHeader>
         <CardContent>
           {question.type === "short" && (
-            <Input disabled placeholder="Short answer text" />
+            <Input disabled placeholder="Short answer text " />
           )}
           {question.type === "long" && (
             <Textarea disabled placeholder="Long answer text" />
           )}
+
           {question.type === "single" && (
-            <div className="space-y-2">
+            <div className="space-y-2 ">
               {options.map((option, index) => (
-                <Input
-                  key={index}
-                  value={option}
-                  onChange={(e) => handleOptionChange(index, e.target.value)}
-                  placeholder={`Option ${index + 1}`}
-                />
+                <div key={index} className="flex items-center gap-2">
+                  <input
+                    type="radio"
+                    disabled
+                    id={`option-${index}`}
+                    name={`question-${question.id}`}
+                    value={option}
+                    onChange={(e) => handleOptionChange(index, e.target.value)}
+                    className="h-4 w-4"
+                  />
+                  <Input
+                    value={option}
+                    onChange={(e) => handleOptionChange(index, e.target.value)}
+                    placeholder={`Option ${index + 1}`}
+                    className="flex-grow"
+                  />
+                </div>
               ))}
-              <Button
-                variant="outline"
-                size="sm"
-                className="mt-2"
-                onClick={handleOptionAdd}
-              >
-                Add Option
-              </Button>
+              <div className="flex justify-end mt-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleOptionAdd}
+                  className="w-8 h-8 flex items-center justify-center rounded-full"
+                >
+                  <Plus className="h-4 w-4" />
+                </Button>
+              </div>
             </div>
           )}
+
           {question.type === "date" && (
             <Input type="date" disabled placeholder="Date input" />
           )}

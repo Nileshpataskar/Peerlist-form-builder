@@ -1,6 +1,13 @@
 import React from "react";
 
-import { AlignLeft, Hash, Link2, List, PlusCircle, Type } from "lucide-react";
+import {
+  AlignLeft,
+  CircleDot,
+  Hash,
+  Link2,
+  PlusCircle,
+  Type,
+} from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,10 +17,14 @@ import {
 import { Button } from "./ui/button";
 import { Question, QuestionType } from "@/lib/types";
 
-const questionTypes: { type: QuestionType; label: string; icon: React.ComponentType }[] = [
+const questionTypes: {
+  type: QuestionType;
+  label: string;
+  icon: React.ComponentType;
+}[] = [
   { type: "short", label: "Short Answer", icon: Type },
   { type: "long", label: "Long Answer", icon: AlignLeft },
-  { type: "single", label: "Single Select", icon: List },
+  { type: "single", label: "Single Select", icon: CircleDot },
   { type: "date", label: "Date", icon: Hash },
   { type: "url", label: "URL", icon: Link2 },
 ];
@@ -24,7 +35,7 @@ const QuestionButton = ({
   onSelect: (type: Question["type"]) => void;
 }) => (
   <DropdownMenu>
-    <DropdownMenuTrigger className="mt-2" asChild>
+    <DropdownMenuTrigger className="mt-2 rounded-xl text-slate-700" asChild>
       <Button size="sm" variant="outline">
         <PlusCircle /> Add Question
       </Button>

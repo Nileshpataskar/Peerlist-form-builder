@@ -5,6 +5,7 @@ import { Textarea } from "./ui/textarea";
 import { Button } from "./ui/button";
 import { MoveLeft } from "lucide-react";
 import { Card } from "./ui/card";
+import { Progress } from "./ui/progress";
 
 const FormPreview = () => {
   const { currentForm, setViewMode, tempForm } = useFormStore();
@@ -14,6 +15,13 @@ const FormPreview = () => {
 
   const formToPreview = currentForm || tempForm;
 
+  const calculateProgress = () => {
+    const totalQuestions = formToPreview?.questions.length || 0;
+    const answeredQuestions =
+      formToPreview?.questions.filter((q) => responses[q.id]).length || 0;
+    return totalQuestions ? (answeredQuestions / totalQuestions) * 100 : 0;
+  };
+
   const handleInputChange = (id: string, value: string) => {
     setResponses({ ...responses, [id]: value });
   };
@@ -22,14 +30,26 @@ const FormPreview = () => {
     setViewMode("create");
   };
 
+  const progress = calculateProgress();
+
   return (
     <div className="w-[700px] border h-full flex flex-col justify-between p-5">
       <div className="space-y-4">
-        <div className="flex flex-row gap-5">
-          <Button variant="outline" size="sm" onClick={handleBack}>
-            <MoveLeft />
-          </Button>
-          <h1 className="text-2xl font-semibold">{formToPreview?.title}</h1>
+        <div className="flex  justify-between">
+          <div className="flex flex-row gap-5">
+            <Button variant="outline" size="sm" onClick={handleBack}>
+              <MoveLeft />
+            </Button>
+            <h1 className="text-2xl font-semibold">{formToPreview?.title}</h1>
+          </div>
+
+          {/* Progress Bar */}
+          <div className="w-80 flex flex-col items-end">
+            <p className="text-sm text-gray-500 mt-1">
+              Form Completeness - {Math.round(progress)}%
+            </p>
+            <Progress value={progress} max={100} className="h-2 mt-2" />
+          </div>
         </div>
         {formToPreview?.questions.map((q) => (
           <Card key={q.id} className="space-y-2 p-4">
@@ -79,8 +99,13 @@ const FormPreview = () => {
           </Card>
         ))}
       </div>
-      <div className="mt-4">
-        <Button onClick={() => alert(JSON.stringify(responses, null, 2))}>
+      <div className="mt-4 flex justify-end border-t-2 p-5">
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => alert(JSON.stringify(responses, null, 2))}
+          className="bg-[#00aa45] hover:bg-[#00aa45]/80 rounded-xl text-sm font-semibold text-white"
+        >
           Submit
         </Button>
       </div>
