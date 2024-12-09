@@ -3,7 +3,7 @@ import { useFormStore } from "@/lib/store";
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
 import { Button } from "./ui/button";
-import { AlignLeft,  Link2, MoveLeft, Type } from "lucide-react";
+import { AlignLeft, Link2, MoveLeft, Type } from "lucide-react";
 import { Card } from "./ui/card";
 import { Progress } from "./ui/progress";
 
@@ -40,18 +40,23 @@ const FormPreview = () => {
             <Button variant="outline" size="sm" onClick={handleBack}>
               <MoveLeft />
             </Button>
-            <h1 className="text-lg /sm:text-2xl font-semibold">{formToPreview?.title}</h1>
+            <h1 className="text-lg /sm:text-2xl font-semibold">
+              {formToPreview?.title}
+            </h1>
           </div>
 
           {/* Progress Bar */}
           <div className="w-2/4 sm:w-80 flex flex-col items-end mt-2">
-            <p className="text-sm text-gray-500 mt-1">
+            <p className="hidden sm:block text-sm text-gray-500 mt-1">
               Form Completeness - {Math.round(progress)}%
+            </p>
+            <p className="sm:hidden text-sm text-gray-500 mt-1">
+               {Math.round(progress)}% From Filled
             </p>
             <Progress
               value={progress}
               max={100}
-              className="h-2 mt-2 bg-blue-200"
+              className="h-2 mt-2 bg-gray-300"
             >
               <div
                 className="h-2 bg-blue-500"

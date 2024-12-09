@@ -106,7 +106,7 @@ const FormCreator = () => {
       <div className="space-y-4">
         <div className="flex justify-between items-center gap-5 border-b p-5">
           <Input
-            value={title || "Untitled Form"}
+            value={title || ""}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="Form Title"
             className="text-md placeholder:text-sm sm:text-2xl rounded-xl border-none"
