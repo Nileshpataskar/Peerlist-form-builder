@@ -183,7 +183,7 @@ const QuestionCard = ({
             <Input
               type="url"
               disabled
-              value={question.url || ""}
+              // value={question.url || ""}
               placeholder="Enter a URL"
             />
           )}
